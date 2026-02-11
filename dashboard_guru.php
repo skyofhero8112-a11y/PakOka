@@ -96,7 +96,7 @@ $data = $koneksi->query("SELECT * FROM announcements ORDER BY date DESC, id DESC
                 </div>
                 <div class="d-flex align-items-center gap-3">
                     <span class="text-white small d-none d-md-block">Halo, Guru</span>
-                    <a href="logout.php" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+                    <a href="index.php" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</a>
                 </div>
             </div>
         </div>

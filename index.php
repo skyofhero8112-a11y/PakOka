@@ -42,7 +42,7 @@
     }
     .navbar-nav .nav-link {
         font-size: 1.1rem;
-        margin-right: 1rem;
+        margin-right: 2rem;
     }
     .hero-buttons {
         display: flex;
@@ -67,8 +67,16 @@
     .navbar-brand img {
     width: 70px;
     height: 70px;
+    margin-right: 12px;
     animation: bounce 2s infinite;
     }
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    
     
     /* Responsive */
     @media (max-width: 768px) {

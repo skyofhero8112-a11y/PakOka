@@ -17,94 +17,23 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != "guru") {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>Buat Pengumuman - Admin Guru</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; min-height: 100vh; padding: 40px 20px; }
         .container-main { max-width: 850px; margin: 0 auto; }
-
-        /* Styling Kartu Utama */
-        .card-custom {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            background: white;
-            overflow: hidden;
-        }
-
-        .card-header-custom {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            padding: 25px;
-            color: white;
-            border-bottom: none;
-        }
-
-        /* Styling Input Form */
-        .form-label {
-            font-weight: 600;
-            color: #495057;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .input-group-text {
-            background-color: #f8f9fa;
-            border: 1px solid #ced4da;
-            border-right: none;
-            color: #1e3c72;
-            border-top-left-radius: 10px;
-            border-bottom-left-radius: 10px;
-        }
-
-        .form-control, .form-select {
-            border: 1px solid #ced4da;
-            border-left: none;
-            padding: 12px 15px;
-            border-top-right-radius: 10px;
-            border-bottom-right-radius: 10px;
-            font-size: 15px;
-        }
-
-        .form-control:focus, .form-select:focus {
-            box-shadow: none;
-            border-color: #ced4da;
-            border-left: 1px solid #4facfe; /* Efek fokus warna biru di kiri */
-        }
-
-        /* Tombol */
-        .btn-submit {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-weight: 600;
-            width: 100%;
-            transition: transform 0.2s;
-        }
+        .card-custom { border: none; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); background: white; overflow: hidden; }
+        .card-header-custom { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 25px; color: white; border-bottom: none; }
+        .form-label { font-weight: 600; color: #495057; font-size: 14px; margin-bottom: 8px; }
+        .input-group-text { background-color: #f8f9fa; border: 1px solid #ced4da; border-right: none; color: #1e3c72; border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
+        .form-control, .form-select { border: 1px solid #ced4da; padding: 12px 15px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; font-size: 15px; }
+        .form-control:focus, .form-select:focus { box-shadow: none; border-color: #4facfe; }
+        .btn-submit { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; border: none; padding: 12px 30px; border-radius: 10px; font-weight: 600; width: 100%; transition: transform 0.2s; }
         .btn-submit:hover { transform: translateY(-2px); color: white; box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3); }
-
-        .btn-back {
-            color: #6c757d;
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 20px;
-            transition: color 0.2s;
-        }
-        .btn-back:hover { color: #1e3c72; }
-
+        .btn-back { color: #6c757d; text-decoration: none; font-weight: 600; display: inline-block; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container-main">
-    <a href="dashboard_guru.php" class="btn-back">
-        <i class="fas fa-arrow-left me-2"></i>Kembali ke Dashboard
-    </a>
+    <a href="dashboard_guru.php" class="btn-back"><i class="fas fa-arrow-left me-2"></i>Kembali ke Dashboard</a>
 
     <div class="card card-custom">
         <div class="card-header-custom">
@@ -113,7 +42,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != "guru") {
         </div>
         <div class="card-body p-4 p-md-5">
             
-            <form action="add_process.php" method="POST">
+            <form action="add_process.php" method="POST" enctype="multipart/form-data">
                 
                 <div class="mb-4">
                     <label class="form-label">Judul Pengumuman</label>
@@ -136,7 +65,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != "guru") {
                         <label class="form-label">Target Jurusan</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-users"></i></span>
-                            <select name="kategori" class="form-select" required>
+                            <select name="kategori" class="form-select" required style="border-left: none;">
                                 <option value="Umum" selected>Semua Jurusan (Umum)</option>
                                 <option value="RPL">RPL (Rekayasa Perangkat Lunak)</option>
                                 <option value="TKJ">TKJ (Teknik Komputer Jaringan)</option>
@@ -144,7 +73,6 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != "guru") {
                                 <option value="AK">Akuntansi</option>
                             </select>
                         </div>
-                        <div class="form-text small text-muted ms-1">Pilih "Umum" jika informasi untuk semua siswa.</div>
                     </div>
                 </div>
 
@@ -153,9 +81,18 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != "guru") {
                     <textarea name="content" class="form-control" rows="6" placeholder="Tuliskan detail informasi lengkap disini..." style="border-left: 1px solid #ced4da; border-radius: 10px;" required></textarea>
                 </div>
 
+                <div class="mb-4">
+                    <label class="form-label">Lampiran Dokumen (PDF/Gambar)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-paperclip"></i></span>
+                        <input type="file" name="file_lampiran" class="form-control" style="border-left: none;">
+                    </div>
+                    <div class="form-text small text-muted">Opsional. Biarkan kosong jika tidak ada lampiran.</div>
+                </div>
+
                 <div class="d-flex justify-content-end gap-2">
                     <button type="reset" class="btn btn-light text-muted border" style="border-radius: 10px;">Reset</button>
-                    <button type="submit" class="btn-submit">
+                    <button type="submit" name="submit" class="btn-submit">
                         <i class="fas fa-paper-plane me-2"></i>Publikasikan
                     </button>
                 </div>

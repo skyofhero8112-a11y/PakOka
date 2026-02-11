@@ -1,0 +1,17 @@
+# Ignore local configuration and sensitive files
+config.php
+.env
+
+# Dependency folders
+/vendor/
+/node_modules/
+
+# IDE/editor folders
+/.vscode/
+
+# System files
+.DS_Store
+
+# Logs and uploads
+*.log
+/uploads/

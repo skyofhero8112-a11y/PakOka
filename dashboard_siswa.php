@@ -8,18 +8,16 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != "siswa") {
     exit;
 }
 
-// 2. LOGIKA PENCARIAN & FILTER (SINKRON)
-// Ambil data dari URL (jika ada)
+// 2. LOGIKA PENCARIAN & FILTER
 $keyword  = isset($_GET['keyword']) ? $_GET['keyword'] : '';
 $kategori = isset($_GET['kategori']) ? $_GET['kategori'] : '';
 $tanggal  = isset($_GET['tanggal']) ? $_GET['tanggal'] : '';
 
-// Query Dasar (WHERE 1=1 adalah trik agar mudah menyambung AND)
+// Query Dasar
 $sql = "SELECT * FROM announcements WHERE 1=1";
 $params = [];
 $types = "";
 
-// Jika user mengetik kata kunci
 if (!empty($keyword)) {
     $sql .= " AND (title LIKE ? OR content LIKE ?)";
     $paramKeyword = "%" . $keyword . "%";
@@ -28,23 +26,20 @@ if (!empty($keyword)) {
     $types .= "ss";
 }
 
-// Jika user memilih Kategori/Jurusan
 if (!empty($kategori)) {
     $sql .= " AND kategori = ?";
     $params[] = $kategori;
     $types .= "s";
 }
 
-// Jika user memilih Tanggal
 if (!empty($tanggal)) {
     $sql .= " AND date = ?";
     $params[] = $tanggal;
     $types .= "s";
 }
 
-$sql .= " ORDER BY date DESC, id DESC"; // Urutkan dari tanggal terbaru
+$sql .= " ORDER BY date DESC, id DESC"; 
 
-// Eksekusi Query dengan Aman (Prepared Statement)
 $stmt = $koneksi->prepare($sql);
 if (!empty($params)) {
     $stmt->bind_param($types, ...$params);
@@ -62,74 +57,43 @@ $result = $stmt->get_result();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>Dashboard Siswa - Sistem Pengumuman</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9;
-            min-height: 100vh;
-            padding-bottom: 40px;
-        }
-
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; min-height: 100vh; padding-bottom: 40px; }
+        
         /* NAVBAR */
-        .navbar-custom {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            padding: 11px 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+        .navbar-custom { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 11px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .navbar-brand { color: white !important; font-weight: 600; font-size: 20px; }
-        .navbar-brand img { width: 75px; height: 75px; margin-right: 10px; }
-        .btn-logout {
-            background: rgba(255, 255, 255, 0.2); color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3); padding: 8px 20px;
-            border-radius: 8px; font-size: 14px; text-decoration: none; transition: 0.3s;
-        }
-        .btn-logout:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+        .navbar-brand img { width: 50px; height: 50px; margin-right: 10px; object-fit: contain; } /* Sedikit perbaikan size logo */
+        .btn-logout { background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.3); padding: 8px 20px; border-radius: 8px; font-size: 14px; text-decoration: none; transition: 0.3s; }
+        .btn-logout:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); color: white; }
 
         .container-main { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
         .page-title { text-align: center; color: #0a1f44; font-weight: 700; font-size: 32px; margin-bottom: 30px; }
 
         /* FILTER CARD */
-        .filter-card {
-            background: white; padding: 25px; border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 30px;
-        }
-        .btn-search {
-            background-color: #1e3c72; color: white; border: none;
-            border-radius: 8px; padding: 10px 20px; width: 100%; font-weight: 600;
-        }
-        .btn-search:hover { background-color: #162d55; }
+        .filter-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .btn-search { background-color: #1e3c72; color: white; border: none; border-radius: 8px; padding: 10px 20px; width: 100%; font-weight: 600; }
+        .btn-search:hover { background-color: #162d55; color: white; }
         
-        /* CARD BERITA */
-        .news-card {
-            background: #fff; border: none; border-radius: 12px;
-            overflow: hidden; height: 100%; display: flex; flex-direction: column;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s;
-        }
-        .news-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        /* CARD BERITA & LINK WRAPPER */
+        .card-link-wrapper { text-decoration: none; color: inherit; display: block; height: 100%; }
+        .card-link-wrapper:hover { color: inherit; }
+
+        .news-card { background: #fff; border: none; border-radius: 12px; overflow: hidden; height: 100%; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s; }
+        .card-link-wrapper:hover .news-card { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         
-        .card-img-wrapper {
-            height: 180px; background: #e9ecef; position: relative;
-        }
+        .card-img-wrapper { height: 180px; background: #e9ecef; position: relative; }
         .card-img-top { width: 100%; height: 100%; object-fit: cover; }
         
-        .badge-kategori {
-            position: absolute; top: 15px; right: 15px;
-            background: rgba(30, 60, 114, 0.9); color: white;
-            padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
+        .badge-kategori { position: absolute; top: 15px; right: 15px; background: rgba(30, 60, 114, 0.9); color: white; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
 
         .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
         .meta-date { font-size: 13px; color: #6c757d; margin-bottom: 10px; }
         .meta-date i { color: #4facfe; margin-right: 5px; }
         
-        .news-title {
-            color: #0a1f44; font-size: 18px; font-weight: 700; line-height: 1.4; margin-bottom: 10px;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-        }
-        .news-content {
-            font-size: 14px; color: #666; margin-bottom: 15px;
-            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-        }
+        .news-title { color: #0a1f44; font-size: 18px; font-weight: 700; line-height: 1.4; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .news-content { font-size: 14px; color: #666; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; flex-grow: 1; }
+        
+        .read-more { margin-top: auto; border-top: 1px solid #f0f0f0; padding-top: 15px; color: #1e3c72; font-weight: 600; font-size: 14px; display: flex; align-items: center; justify-content: space-between; }
         
         /* Empty State */
         .empty-state { text-align: center; padding: 60px 20px; grid-column: 1/-1; }
@@ -145,7 +109,7 @@ $result = $stmt->get_result();
                     <img src="logo_skensa.png" alt="Logo">
                     SMK Negeri 1 Denpasar
                 </div>
-                <a href="logout.php" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+                <a href="index.php" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</a>
             </div>
         </div>
     </nav>
@@ -200,32 +164,34 @@ $result = $stmt->get_result();
             <?php 
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) { 
-                    // Format Tanggal Indonesia
                     $tgl = date('d F Y', strtotime($row['date']));
-                    
-                    // Gambar Placeholder (Karena belum ada kolom gambar di DB)
-                    // Jika nanti mau nambah kolom gambar, ganti baris ini.
+                    // Placeholder image logic
                     $gambar = "https://placehold.co/600x400/1e3c72/ffffff?text=" . urlencode(substr($row['title'], 0, 20));
-                    
-                    // Cek Kategori (Default 'Umum' jika kosong)
                     $cat = !empty($row['kategori']) ? $row['kategori'] : 'Umum';
             ?>
             <div class="col-12 col-md-6 col-lg-4">
-                <div class="news-card">
-                    <div class="card-img-wrapper">
-                        <img src="<?= $gambar ?>" class="card-img-top" alt="News">
-                        <span class="badge-kategori"><?= htmlspecialchars($cat) ?></span>
-                    </div>
-                    <div class="card-body">
-                        <div class="meta-date">
-                            <i class="far fa-calendar-alt"></i> <?= $tgl ?>
+                <a href="detail_pengumuman.php?id=<?= $row['id'] ?>" class="card-link-wrapper">
+                    <div class="news-card">
+                        <div class="card-img-wrapper">
+                            <img src="<?= $gambar ?>" class="card-img-top" alt="News">
+                            <span class="badge-kategori"><?= htmlspecialchars($cat) ?></span>
                         </div>
-                        <h3 class="news-title"><?= htmlspecialchars($row['title']) ?></h3>
-                        <div class="news-content">
-                            <?= substr(strip_tags($row['content']), 0, 100) ?>...
+                        <div class="card-body">
+                            <div class="meta-date">
+                                <i class="far fa-calendar-alt"></i> <?= $tgl ?>
+                            </div>
+                            <h3 class="news-title"><?= htmlspecialchars($row['title']) ?></h3>
+                            <div class="news-content">
+                                <?= substr(strip_tags($row['content']), 0, 100) ?>...
+                            </div>
+                            
+                            <div class="read-more">
+                                <span>Baca Selengkapnya</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             <?php 
                 } 

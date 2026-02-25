@@ -347,23 +347,17 @@ session_start();
                 <?php endif; ?>
             </div>
 
-            <!-- Checkbox policy -->
-            <div class="policy-checkbox">
-                <input type="checkbox" id="policy" name="policy" required>
-                <label for="policy">I accept the policy and terms</label>
-            </div>
-
             <!-- Tombol Sign Up -->
             <button type="submit" class="btn-register">
-                <i class="fas fa-user-plus"></i> Sign Up
+                <i class="fas fa-user-plus"></i> Daftar Sekarang
             </button>
 
             <!-- Footer tamai.in -->
-            <div class="footer-text">tamai.in</div>
+            <div class="footer-text">SMKN 1 DENPASAR</div>
 
             <!-- Link ke login -->
             <div class="login-link">
-                Already have an account! <a href="login.php">Login</a>
+                Sudah punya akun! <a href="login.php">Login</a>
             </div>
         </form>
     </div>

@@ -1,33 +1,29 @@
 <?php
-session_start(); //menyimpan data pengguna
-include "koneksi.php"; //Memanggil file koneksi tadi supaya bisa akses database.
+session_start();
+include "koneksi.php";
 
 $error_username = "";
 $error_password = "";
 
-//Cek apakah user menekan tombol Login
-if ($_SERVER['REQUEST_METHOD'] === 'POST') { //jika request methodnya post maka jalankan kode di bawah
-    $username = $_POST['username']; //variabel username menyimpan data dari array $_POST yang memiliki kunci (key) bernama 'username'
-    $password = $_POST['password']; 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
     $role = $_POST['role'];
 
     $check = $koneksi->query("SELECT * FROM users WHERE username='$username' AND role='$role'");
 
-    if ($check->num_rows == 0) { //jumlah baris (hasil) yang dikembalikan oleh kueri database adalah nol 
+    if ($check->num_rows == 0) {
         $error_username = "Akun tidak ditemukan";
     } else {
-        $user = $check->fetch_assoc(); //fetch_assoc(): mengambil data user dari hasil query dalam bentuk array asosiatif
+        $user = $check->fetch_assoc();
 
         if ($user['password'] != $password) {
             $error_password = "Kata sandi salah";
         } else {
-            // Login berhasil
             if ($role == "guru") {
-                $_SESSION['temp_user'] = $user; //$user berasal dari hasil query database, lalu disimpan di temp_user 
-                //$_SESSION: Ini adalah variabel superglobal bawaan PHP yang digunakan untuk menyimpan data sesi. 
-                //tempt_user :simpan data user sementara sebelum verifikasi dua langkah
-                header("Location: verify_code.php"); 
-                exit(); //Menghentikan eksekusi skrip setelah pengalihan
+                $_SESSION['temp_user'] = $user;
+                header("Location: verify_code.php");
+                exit();
             }
             $_SESSION['user'] = $user;
             header("location: dashboard_siswa.php");
@@ -42,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { //jika request methodnya post maka 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>Login - Sistem Pengumuman Sekolah</title>
     <style>
@@ -53,283 +49,340 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { //jika request methodnya post maka 
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #3da0f8ff 0%, #00f2fe 100%);
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
             min-height: 100vh;
             display: flex;
+            background: linear-gradient(to left, #4f9cf4, #2b6cb0);
             align-items: center;
-            justify-content: center;
+            justify-content: center; /* konten berada di tengah */
             padding: 20px;
+            position: relative;
         }
 
-        .login-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            max-width: 450px;
+        /* overlay gelap agar teks lebih terbaca */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            animation: slideUp 0.5s ease-out;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
         }
 
-        @keyframes slideUp {
+        .login-panel {
+            position: relative;
+            z-index: 1;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            max-width: 440px;
+            width: 100%;
+            padding: 45px 40px;
+            animation: fadeInLeft 0.6s ease-out;
+            margin-left: 5%;
+        }
+
+        @keyframes fadeInLeft {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateX(-40px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(0);
             }
         }
 
-        .login-header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            padding: 40px 30px;
-            text-align: center;
-            color: white;
+        /* Logo di dalam panel, posisi absolute di kanan atas */
+        .logo-skensa {
+            position: absolute;
+            top: 35px;
+            right: 40px;
+            width: 70px;
+            height: 70px;
+            animation: float 3s ease-in-out infinite;
+            z-index: 10;
         }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+}
 
-        .login-header img {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 15px;
-            animation: bounce 2s infinite;
+        h2 {
+        font-size: 36px;
+        font-weight: 600;
+        color: #1e2a3a;
+        line-height: 1.2;
+        margin-bottom: 30px;
         }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        h2 span {
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 30px;
         }
-
-
-        .login-header h2 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .login-header p {
-            margin: 0;
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .login-body {
-            padding: 40px 35px;
+        h2 span::before {
+        content: '';
+        position: absolute;
+        top: -45px;
+        left: -40px;
+        width: 440px;
+        height: 150px;
+        background: rgba(79, 156, 244, 0.3);
+        border-radius: 10% 8% 90% 40%;
+        z-index: -1;
+        transform: translate(10deg, -20px);
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 22px;
+            position: relative;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            color: #333;
+            margin-bottom: 6px;
+            color: #2d3748;
             font-weight: 500;
             font-size: 14px;
+            letter-spacing: 0.3px;
         }
 
         .input-group {
             position: relative;
+            display: flex;
+            align-items: center;
         }
 
         .input-group i {
             position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #4facfe;
+            left: 16px;
+            color: #a0aec0;
             font-size: 16px;
+            transition: color 0.2s;
         }
 
-        .text-danger {
-            background-color: #ffe0e0; /* merah muda lembut */
-            color: #b10000;           /* text merah tajam tapi soft */
-            font-size: 15px;
-            margin-top: 6px;
-            display: block;
-            padding: 17px 10px;
-            border-left: 4px solid #ff4d4d;
-            border-radius: 5px;
-            animation: fadeIn 0.2s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-3px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-
-        .form-control {
+        .form-control, .form-select {
             width: 100%;
-            padding: 12px 15px 12px 45px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            padding: 14px 16px 14px 48px;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
             font-size: 15px;
-            transition: all 0.3s ease;
+            background: #f7fafc;
+            transition: all 0.2s;
+            color: #1e2a3a;
         }
 
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             outline: none;
-            border-color: #4facfe;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+            border-color: #4f9cf4;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 156, 244, 0.15);
         }
 
-        .form-select {
-            width: 100%;
-            padding: 12px 15px 12px 45px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            background-color: white;
+        .form-control:focus + i, .form-select:focus + i {
+            color: #4f9cf4;
+        }
+
+        /* styling checkbox dan link lupa password */
+        .row-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 18px 0 25px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remember input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #4f9cf4;
             cursor: pointer;
         }
 
-        .form-select:focus {
-            outline: none;
-            border-color: #4facfe;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        .remember label {
+            color: #4a5568;
+            font-size: 15px;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: #4f9cf4;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .forgot-link:hover {
+            color: #2b6cb0;
+            text-decoration: underline;
         }
 
         .btn-login {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 15px;
+            background: linear-gradient(135deg, #4f9cf4, #2b6cb0);
             border: none;
-            border-radius: 10px;
+            border-radius: 14px;
             color: white;
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(43, 108, 176, 0.3);
+            margin-bottom: 25px;
         }
 
         .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(43, 108, 176, 0.4);
         }
 
         .btn-login:active {
             transform: translateY(0);
         }
 
-        .register-link {
+        .footer-text {
             text-align: center;
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 1px solid #e0e0e0;
+            color: #a0aec0;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin-top: 5px;
         }
 
-        .register-link p {
-            color: #666;
+        .text-danger {
+            background-color: #fed7d7;
+            color: #c53030;
             font-size: 14px;
-            margin: 0;
+            margin-top: 8px;
+            padding: 10px 14px;
+            border-left: 4px solid #f56565;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeIn 0.2s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 15px;
+            color: #4a5568;
         }
 
         .register-link a {
-            color: #4facfe;
-            text-decoration: none;
+            color: #4f9cf4;
             font-weight: 600;
-            transition: all 0.3s ease;
+            text-decoration: none;
         }
 
         .register-link a:hover {
-            color: #1e3c72;
             text-decoration: underline;
         }
 
-        @media (max-width: 480px) {
-            .login-container {
-                margin: 10px;
+        /* menyesuaikan ikon pada select */
+        .input-group .form-select {
+            padding-left: 48px;
+        }
+
+        @media (max-width: 600px) {
+            .login-panel {
+                margin-left: 0;
+                padding: 35px 25px;
             }
-            
-            .login-header {
-                padding: 30px 20px;
-            }
-            
-            .login-body {
-                padding: 30px 25px;
+            h2 {
+                font-size: 30px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-header">
-            <img src="logo_skensa.png" alt="Logo SMK Negeri 1 Denpasar">
-            <h2>Sistem Pengumuman</h2>
-            <p>SMK Negeri 1 Denpasar</p>
-        </div>
-        
-        <div class="login-body">
-            <form action="" method="POST">
-                <div class="form-group">
-                    <label for="username">Nama Pengguna</label>
-                    <div class="input-group">
-                        <i class="fas fa-user"></i>
-                        <input type="text" class="form-control" id="username" 
-                            name="username" placeholder="Masukkan nama pengguna"
-                            value="<?= htmlspecialchars($username ?? "") ?>" required>
-                            <!--Kalau user salah login, form tidak dikosongkan. Username tetap muncul agar user tidak harus mengetik ulang.
-                            htmlspecialchars() mengubah beberapa karakter yang telah ditentukan sebelumnya menjadi entitas HTML.-->
+    <div class="login-panel">
+        <h2>
+            <span>Login!</span>
+            <img src="logo_skensa.png" alt="Logo Skensa" class="logo-skensa">
+        </h2>
+
+        <form action="" method="POST">
+            <!-- Email (menggunakan field username) -->
+            <div class="form-group">
+                <label for="username">NickName</label>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="text" class="form-control" id="username" name="username"
+                        placeholder="Enter Your NickName"
+                        value="<?= htmlspecialchars($username ?? '') ?>" required>
+                </div>
+                <?php if (!empty($error_username)): ?>
+                    <div class="text-danger">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <?= $error_username ?>
                     </div>
+                <?php endif; ?>
+            </div>
 
-                    <?php if (!empty($error_username)): ?> <!--Jika $error_username ada isinya → tampilkan pesan error bertanda merah di bawah input.-->
-                        <small class="text-danger">
-                            <i class="fas fa-exclamation-circle me-1"></i>
-                            <?= $error_username ?>
-                        </small>
-                    <?php endif; ?> <!--berfungsi untuk menutup pernyataan if, elseif, dan else yang dibuka dengan sintaks alternatif (menggunakan titik dua).-->
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" class="form-control" id="password" name="password"
+                        placeholder="Enter Your Password"
+                        value="<?= htmlspecialchars($password ?? '') ?>" required>
                 </div>
-
-                <div class="form-group">
-                    <label for="password">Kata Sandi</label>
-                    <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" class="form-control" id="password" 
-                            name="password" placeholder="Masukkan kata sandi"
-                            value="<?= htmlspecialchars($password ?? "") ?>" required>
+                <?php if (!empty($error_password)): ?>
+                    <div class="text-danger">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <?= $error_password ?>
                     </div>
+                <?php endif; ?>
+            </div>
 
-                    <?php if (!empty($error_password)): ?>
-                        <small class="text-danger">
-                            <i class="fas fa-exclamation-circle me-1"></i>
-                            <?= $error_password ?>
-                        </small>
-                    <?php endif; ?>
+            <!-- Dropdown Role (tetap dipertahankan) -->
+            <div class="form-group">
+                <label for="role">Login Sebagai</label>
+                <div class="input-group">
+                    <i class="fas fa-user-tag"></i>
+                    <select class="form-select" id="role" name="role">
+                        <option value="siswa" <?= (isset($role) && $role == 'siswa') ? 'selected' : '' ?>>Siswa</option>
+                        <option value="guru" <?= (isset($role) && $role == 'guru') ? 'selected' : '' ?>>Guru</option>
+                    </select>
                 </div>
+            </div>
 
+            <!-- Tombol Login -->
+            <button type="submit" class="btn-login">
+                <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i> Log In
+            </button>
 
-                <div class="form-group">
-                    <label for="role">Masuk Sebagai</label>
-                    <div class="input-group">
-                        <i class="fas fa-user-tag"></i>
-                        <select class="form-select" id="role" name="role">
-                            <option value="siswa" <?= (isset($role) && $role=='siswa') ? 'selected' : '' ?>>Siswa</option> <!--Jika kondisi benar → tampilkan "selected". Jika kondisi salah → tampilkan "" (kosong)-->
-                            <option value="guru" <?= (isset($role) && $role=='guru') ? 'selected' : '' ?>>Guru</option>
-                            <!--isset untuk memeriksa apakah sebuah variabel sudah dideklarasikan (dibuat) dan tidak bernilai NULL--->
-                            <!--Kalau ditambahkan: </option selected> Maka option itu akan otomatis terpilih--->
-                        </select>
-                    </div>
-                </div>
+            <!-- Footer tamai.in -->
+            <div class="footer-text">SMKN 1 DENPASAR</div>
 
-                <button type="submit" class="btn-login">
-                    <i class="fas fa-sign-in-alt"></i> Masuk
-                </button>
-
-                <div class="register-link">
-                    <p>Belum punya akun? <a href="register.php">Daftar disini</a></p>
-                </div>
-            </form>
-        </div>
+            <!-- Link ke halaman register -->
+            <div class="register-link">
+                <p>Tidak punya akun? <a href="register.php">Daftar Disini</a></p>
+            </div>
+        </form>
     </div>
 
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

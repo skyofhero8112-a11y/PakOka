@@ -256,18 +256,18 @@ session_start();
 <body>
     <div class="register-panel">
         <h2>
-            <span>SignUp!</span>
+            <span>Daftar!</span>
             <img src="logo_skensa.png" alt="Logo Skensa" class="logo-skensa">
         </h2>
 
         <form action="register_process.php" method="POST">
             <!-- Username -->
             <div class="form-group">
-                <label for="username">Enter Your User Name</label>
+                <label for="username">Masukan Nama Anda</label>
                 <div class="input-group">
                     <i class="fas fa-user"></i>
                     <input type="text" class="form-control" id="username" name="username"
-                           placeholder="Enter Your User Name"
+                           placeholder="Masukan Nama Anda"
                            value="<?= htmlspecialchars($_SESSION['old']['username'] ?? '') ?>" required>
                 </div>
                 <?php if (isset($_SESSION['error_username'])): ?>
@@ -281,11 +281,11 @@ session_start();
 
             <!-- Password -->
             <div class="form-group">
-                <label for="password">Enter Your Password</label>
+                <label for="password">Masukan Password Anda</label>
                 <div class="input-group">
                     <i class="fas fa-lock"></i>
                     <input type="password" class="form-control" id="password" name="password"
-                           placeholder="Enter Your Password" required>
+                           placeholder="Masukan Password Anda" required>
                 </div>
             </div>
 
@@ -345,7 +345,7 @@ session_start();
                         <?= $_SESSION['error_kode']; unset($_SESSION['error_kode']); ?>
                     </div>
                 <?php endif; ?>
-            </div>
+            </div>  
 
             <!-- Tombol Sign Up -->
             <button type="submit" class="btn-register">
@@ -357,7 +357,7 @@ session_start();
 
             <!-- Link ke login -->
             <div class="login-link">
-                Sudah punya akun! <a href="login.php">Login</a>
+                Sudah punya akun! <a href="login.php">Masuk</a>
             </div>
         </form>
     </div>

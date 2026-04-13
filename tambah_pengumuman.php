@@ -69,9 +69,17 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != "guru") {
                                 <option value="Umum" selected>Semua Jurusan (Umum)</option>
                                 <option value="RPL">RPL (Rekayasa Perangkat Lunak)</option>
                                 <option value="TKJ">TKJ (Teknik Komputer Jaringan)</option>
-                                <option value="MM">Multimedia</option>
-                                <option value="AK">Akuntansi</option>
-                            </select>
+                                <option value="PRF">PRF (Perfilman)</option>
+                                <option value="DKV">DKV (Desain Komunikasi Visual)</option>
+                                <option value="TKRO">TKRO (Teknik Kendaraan Ringan Otomotif)</option>
+                                <option value="TBSM">TBSM (Teknik Bisnis Sepeda Motor)</option>
+                                <option value="TILT">TILT (Teknik Instalasi Tenaga LListrik)</option>
+                                <option value="TPTU">TPTU (Teknik Pendingin dan Tata Udara)</option>    
+                                <option value="TEIN">TEIN (Teknik Elektronika Industri)</option>
+                                <option value="PM">PM (Permesinan)</option>
+                                <option value="DPIB">DPIB (Design Permodelan dan Informasi Bangunan)</option>
+                                <option value="BKP">BKP (Bisnis Kontruksi dan Properti)</option>
+                            </select>   
                         </div>
                     </div>
                 </div>

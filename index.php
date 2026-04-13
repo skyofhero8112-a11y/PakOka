@@ -111,7 +111,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.php">  Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.php">Masuk</a></li>
                     <li class="nav-item"><a class="nav-link btn btn-primary text-white ms-2" href="register.php">Daftar</a></li>
                 </ul>
             </div>
@@ -125,7 +125,7 @@
             <h2 class="h3 mb-4">SMKN 1 Denpasar</h2>
             <p class="lead mb-5">Kelola dan pantau kegiatan ekstrakurikuler dan informasi sekolah</p>
             <a href="register.php" class="btn btn-light btn-lg me-3"><i class="fas fa-user-plus"></i> Daftar Sekarang</a>
-            <a href="login.php" class="btn btn-outline-light btn-lg"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a href="login.php" class="btn btn-outline-light btn-lg"><i class="fas fa-sign-in-alt"></i> Masuk</a>
         </div>
     </section>
 

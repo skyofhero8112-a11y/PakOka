@@ -324,11 +324,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form action="" method="POST">
             <!-- Email (menggunakan field username) -->
             <div class="form-group">
-                <label for="username">NickName</label>
+                <label for="username">Nama</label>
                 <div class="input-group">
                     <i class="fas fa-envelope"></i>
                     <input type="text" class="form-control" id="username" name="username"
-                        placeholder="Enter Your NickName"
+                        placeholder="Masukan Nama Anda"
                         value="<?= htmlspecialchars($username ?? '') ?>" required>
                 </div>
                 <?php if (!empty($error_username)): ?>
@@ -358,7 +358,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Dropdown Role (tetap dipertahankan) -->
             <div class="form-group">
-                <label for="role">Login Sebagai</label>
+                <label for="role">Masuk Sebagai</label>
                 <div class="input-group">
                     <i class="fas fa-user-tag"></i>
                     <select class="form-select" id="role" name="role">
@@ -370,7 +370,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Tombol Login -->
             <button type="submit" class="btn-login">
-                <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i> Log In
+                <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i> Masuk
             </button>
 
             <!-- Footer tamai.in -->

@@ -46,7 +46,7 @@ if (!$data) {
 
         /* 1. HEADER MEWAH */
         .header-bg {
-            background: linear-gradient(135deg, #c0c7cc 0%, #c0c7cc 100%); /* Warna Premium Deep Navy */
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* Warna Premium Deep Navy */
             height: 320px;
             padding-top: 40px;
             position: relative;

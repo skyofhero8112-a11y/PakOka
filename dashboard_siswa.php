@@ -159,12 +159,19 @@ $result = $stmt->get_result();
                     <div class="col-md-3">
                         <label class="form-label small text-muted">Kategori</label>
                         <select name="kategori" class="form-select">
-                            <option value="">Semua Kategori</option>
-                            <option value="Umum" <?= $kategori == 'Umum' ? 'selected' : '' ?>>Umum</option>
-                            <option value="RPL" <?= $kategori == 'RPL' ? 'selected' : '' ?>>RPL</option>
-                            <option value="TKJ" <?= $kategori == 'TKJ' ? 'selected' : '' ?>>TKJ</option>
-                            <option value="MM" <?= $kategori == 'MM' ? 'selected' : '' ?>>Multimedia</option>
-                            <option value="AK" <?= $kategori == 'AK' ? 'selected' : '' ?>>Akuntansi</option>
+                            <option value="">-- Pilih Jurusan --</option>
+                            <option value="RPL" <?= (($_SESSION['old']['jurusan'] ?? '') == 'RPL') ? 'selected' : '' ?>>RPL (Rekayasa Perangkat Lunak)</option>
+                            <option value="TKJ" <?= (($_SESSION['old']['jurusan'] ?? '') == 'TKJ') ? 'selected' : '' ?>>TKJ (Teknik Komputer Jaringan)</option>
+                            <option value="PRF" <?= (($_SESSION['old']['jurusan'] ?? '') == 'PRF') ? 'selected' : '' ?>>Perfilman</option>
+                            <option value="DKV" <?= (($_SESSION['old']['jurusan'] ?? '') == 'DKV') ? 'selected' : '' ?>>Desain Komunikasi Visual</option>
+                            <option value="TKRO" <?= (($_SESSION['old']['jurusan'] ?? '') == 'TKRO') ? 'selected' : '' ?>>Teknik Kendaraan Ringan Otomotif</option>
+                            <option value="TSM" <?= (($_SESSION['old']['jurusan'] ?? '') == 'TSM') ? 'selected' : '' ?>>Teknik Sepeda Motor</option>
+                            <option value="TILT" <?= (($_SESSION['old']['jurusan'] ?? '') == 'TILT') ? 'selected' : '' ?>>Teknik Instalasi Tenaga Listrik</option>
+                            <option value="TPTU" <?= (($_SESSION['old']['jurusan'] ?? '') == 'TPTU') ? 'selected' : '' ?>>Teknik Pendingin dan Tata Udara</option>
+                            <option value="TEIN" <?= (($_SESSION['old']['jurusan'] ?? '') == 'TEIN') ? 'selected' : '' ?>>Teknik Elektronika Industri</option>
+                            <option value="PM" <?= (($_SESSION['old']['jurusan'] ?? '') == 'PM') ? 'selected' : '' ?>>Permesinan</option>
+                            <option value="DPIB" <?= (($_SESSION['old']['jurusan'] ?? '') == 'DPIB') ? 'selected' : '' ?>>Design Permodelan dan Informasi Bangunan</option>
+                            <option value="TKP" <?= (($_SESSION['old']['jurusan'] ?? '') == 'TKP') ? 'selected' : '' ?>>Teknik Kontruksi dan Pembangunan</option>
                         </select>
                     </div>
 

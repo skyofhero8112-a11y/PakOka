@@ -72,13 +72,13 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != "guru") {
                                 <option value="PRF">PRF (Perfilman)</option>
                                 <option value="DKV">DKV (Desain Komunikasi Visual)</option>
                                 <option value="TKRO">TKRO (Teknik Kendaraan Ringan Otomotif)</option>
-                                <option value="TBSM">TBSM (Teknik Bisnis Sepeda Motor)</option>
-                                <option value="TILT">TILT (Teknik Instalasi Tenaga LListrik)</option>
+                                <option value="TBSM">TSM (Teknik Sepeda Motor)</option>
+                                <option value="TILT">TILT (Teknik Instalasi Tenaga Listrik)</option>
                                 <option value="TPTU">TPTU (Teknik Pendingin dan Tata Udara)</option>    
                                 <option value="TEIN">TEIN (Teknik Elektronika Industri)</option>
                                 <option value="PM">PM (Permesinan)</option>
                                 <option value="DPIB">DPIB (Design Permodelan dan Informasi Bangunan)</option>
-                                <option value="BKP">BKP (Bisnis Kontruksi dan Properti)</option>
+                                <option value="BKP">TKP (Teknik Kontruksi dan Pembangunan)</option>
                             </select>   
                         </div>
                     </div>

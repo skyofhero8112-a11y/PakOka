@@ -125,6 +125,10 @@ $data = $koneksi->query("SELECT * FROM announcements ORDER BY date DESC, id DESC
                     // Gambar Placeholder
                     $gambar = "https://placehold.co/600x400/1e3c72/ffffff?text=" . urlencode($row['title']);
             ?>
+            // melakukan perulangan (while) guna menampilkan seluruh data pengumuman dari 
+            database secara otomatis, 
+            sekaligus merapikan format tanggal, 
+            kategori, dan gambar pendukungnya agar siap ditampilkan di halaman website.
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="announcement-card">
                     <div style="position: relative;">

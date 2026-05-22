@@ -1,50 +1,78 @@
 <?php 
+// Menghubungkan halaman dengan session global untuk melacak status login
 session_start();
+
+// Menyertakan file konfigurasi database
 include "koneksi.php";
 
-// 1. Cek Login Siswa
+// =========================================================================
+// 1. PROTEKSI HALAMAN (AUTENTIKASI & OTORISASI)
+// =========================================================================
+// Fungsi: Memastikan hanya user yang sudah login dan memiliki peran 'siswa' 
+// yang dapat mengakses halaman ini. Jika tidak sesuai, akan dilempar ke login.php.
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != "siswa") {
     header("Location: login.php");
     exit;
 }
 
-// 2. LOGIKA PENCARIAN & FILTER
+// =========================================================================
+// 2. MENANGKAP DATA FILTER DARI URL (METODE GET)
+// =========================================================================
+// Mengambil parameter pencarian. Jika parameter tidak diisi di URL, diisi dengan string kosong.
 $keyword  = isset($_GET['keyword']) ? $_GET['keyword'] : '';
 $kategori = isset($_GET['kategori']) ? $_GET['kategori'] : '';
 $tanggal  = isset($_GET['tanggal']) ? $_GET['tanggal'] : '';
 
-// Query Dasar
+// =========================================================================
+// 3. PEMBUATAN QUERY SQL DINAMIS
+// =========================================================================
+// Query dasar untuk mengambil data dari tabel announcements.
+// Angka 1=1 adalah trik SQL agar penambahan kondisi 'AND' di bawah bisa berjalan fleksibel.
 $sql = "SELECT * FROM announcements WHERE 1=1";
-$params = [];
-$types = "";
+$params = []; // Array untuk menampung data inputan user (untuk diproses di bind_param)
+$types = "";  // String untuk menampung tipe data parameter (misal: 's' untuk string)
 
+// Kondisi A: Jika user mencari berdasarkan kata kunci (Judul atau Isi Pengumuman)
 if (!empty($keyword)) {
     $sql .= " AND (title LIKE ? OR content LIKE ?)";
-    $paramKeyword = "%" . $keyword . "%";
+    $paramKeyword = "%" . $keyword . "%"; // Menggunakan wildcard % agar pencarian bersifat fleksibel
+    $params[] = $paramKeyword; // Disimpan 2x karena ada 2 tanda tanya (?) pada query di atas
     $params[] = $paramKeyword;
-    $params[] = $paramKeyword;
-    $types .= "ss";
+    $types .= "ss"; // 'ss' berarti kedua parameter di atas bertipe string
 }
 
+// Kondisi B: Jika user memilih kategori tertentu
 if (!empty($kategori)) {
     $sql .= " AND kategori = ?";
     $params[] = $kategori;
-    $types .= "s";
+    $types .= "s"; // 's' berarti parameter kategori bertipe string
 }
 
+// Kondisi C: Jika user memilih tanggal tertentu
 if (!empty($tanggal)) {
     $sql .= " AND date = ?";
     $params[] = $tanggal;
-    $types .= "s";
+    $types .= "s"; // 's' berarti parameter tanggal bertipe string
 }
 
+// Mengurutkan hasil agar pengumuman terbaru (berdasarkan tanggal dan ID terbesar) muncul paling atas
 $sql .= " ORDER BY date DESC, id DESC"; 
 
+// =========================================================================
+// 4. EKSEKUSI QUERY DENGAN PREPARED STATEMENTS (AMAN DARI SQL INJECTION)
+// =========================================================================
+// Menyiapkan template query ke database
 $stmt = $koneksi->prepare($sql);
+
+// Jika ada filter yang diisi, ikat data asli (binding) ke dalam tanda tanya (?) pada query
 if (!empty($params)) {
-    $stmt->bind_param($types, ...$params);
+    $stmt->bind_param($types, ...$params); // Menggunakan operator splat (...) untuk memecah array menjadi argumen
 }
+
+// Menjalankan query yang sudah aman
 $stmt->execute();
+
+// Menyimpan hasil akhir database ke dalam variabel $result untuk ditampilkan di HTML
 $result = $stmt->get_result();
 ?>
 
